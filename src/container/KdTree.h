@@ -9,12 +9,14 @@ class KdTree {
   struct Node;
 
  private:
-  Node *root;
+  Node *root = nullptr;
+  int rank;
   bool empty();
+  bool find(Point &point, Node **&ptr, int dimension);
 
  public:
-  bool insert(Point &element);
-  bool search(Point &element);
+  bool insert(Point &point);
+  bool search(Point &point);
   void print();
   ForwardIterator<Point, Node> begin();
   ForwardIterator<Point, Node> end();
