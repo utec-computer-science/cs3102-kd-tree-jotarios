@@ -22,5 +22,7 @@ int main() {
     tree.insert(element);
   }
 
+  tree.print();
+
   return 0;
 }

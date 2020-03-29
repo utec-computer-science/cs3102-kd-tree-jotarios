@@ -10,7 +10,7 @@ class KdTree {
 
  private:
   Node *root = nullptr;
-  int rank;
+  int rank = 0;
   bool empty();
   bool find(Point &point, Node **&ptr, int dimension);
 

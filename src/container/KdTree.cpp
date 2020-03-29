@@ -86,3 +86,34 @@ bool KdTree<Point>::insert(Point &point) {
 
   return false;
 }
+
+/**
+ * Level print of the Kd Tree
+ *
+ * @tparam Point
+ */
+template<class Point>
+void KdTree<Point>::print() {
+  std::queue<Node *> q;
+  Node *node;
+
+  q.push(this->root);
+
+  while (!q.empty()) {
+    node = q.front();
+    q.pop();
+
+    std::cout << "(";
+    for (auto init = node->data.begin(); init < (node->data.end() - 1); init++) {
+      std::cout << *init << ", ";
+    }
+
+    std::cout << *(node->data.end() - 1) << ")" << std::endl;
+
+    if (node->left != nullptr)
+      q.push(node->left);
+
+    if (node->right != nullptr)
+      q.push(node->right);
+  };
+}
