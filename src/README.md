@@ -1,8 +1,12 @@
 # Kd Tree implementation
----
+
 
 Run
 ---
 
-> $ gcc main.cpp && ./a.out
+Execute this command on your terminal:
+
+```
+$ c++ main.cpp && ./a.out
+```
 
