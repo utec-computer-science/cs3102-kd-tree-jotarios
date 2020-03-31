@@ -1,6 +1,4 @@
 #include "KdTree.h"
-#include "../iterator/ForwardIterator.cpp"
-#include <queue>
 
 /**
  * Node structure
@@ -88,6 +86,94 @@ bool KdTree<Point>::insert(Point &point) {
 }
 
 /**
+ * Use a euclidean function to calculate the distance between two points
+ *
+ * @tparam Point
+ * @param point
+ * @param query
+ * @return
+ */
+template<class Point>
+double KdTree<Point>::distance(Point &point, Point &query) {
+  double sum = 0.0;
+  double distance;
+
+  auto begin = point.begin();
+  auto end = point.end();
+  auto beginQuery = query.begin();
+
+  while (begin != end) {
+    distance = (*begin++) - (*beginQuery++);
+    sum += distance * distance;
+  }
+
+  return sum > 0.0 ? std::sqrt(sum) : 0.0;
+}
+
+/**
+ * Use a recursive search to find the NN to the query point.
+ *
+ * @tparam Point
+ * @param query
+ * @param node
+ * @param dimension
+ * @return
+ */
+template<class Point>
+typename KdTree<Point>::Node *KdTree<Point>::recursiveSearch(Point &query, Node *node, int dimension) {
+  if (node == nullptr || this->distance(node->data, query) > bestDistance) {
+    return nullptr;
+  }
+
+  double distance = this->distance(node->data, query);
+
+  if (distance < bestDistance) {
+    bestDistance = distance;
+    best = node;
+  }
+
+  dimension++;
+  this->recursiveSearch(query, node->left, dimension % rank);
+  this->recursiveSearch(query, node->right, dimension % rank);
+
+  return best;
+}
+
+/**
+ * Search the NN to the query point
+ *
+ * @tparam Point
+ * @param query
+ * @return
+ */
+template<class Point>
+typename KdTree<Point>::Node *KdTree<Point>::search(Point &query) {
+  if (this->empty()) {
+    std::cout << "No results found. No points are available." << std::endl;
+    return nullptr;
+  }
+
+  return this->recursiveSearch(query, this->root, 0);
+}
+
+/**
+ * Print a node
+ *
+ * @tparam Point
+ * @param node
+ */
+template<class Point>
+void KdTree<Point>::print(Node *node) {
+  std::cout << "(";
+
+  for (auto init = node->data.begin(); init < (node->data.end() - 1); init++) {
+    std::cout << *init << ", ";
+  }
+
+  std::cout << *(node->data.end() - 1) << ")" << std::endl;
+}
+
+/**
  * Level print of the Kd Tree
  *
  * @tparam Point
@@ -103,12 +189,7 @@ void KdTree<Point>::print() {
     node = q.front();
     q.pop();
 
-    std::cout << "(";
-    for (auto init = node->data.begin(); init < (node->data.end() - 1); init++) {
-      std::cout << *init << ", ";
-    }
-
-    std::cout << *(node->data.end() - 1) << ")" << std::endl;
+    this->print(node);
 
     if (node->left != nullptr)
       q.push(node->left);

@@ -22,7 +22,12 @@ int main() {
     tree.insert(element);
   }
 
+  std::cout << "Level print:" << std::endl;
   tree.print();
+
+  std::vector<int> query = {1, 7};
+  std::cout << "Resultado de búsqueda: " << std::endl;
+  tree.print(tree.search(query));
 
   return 0;
 }
